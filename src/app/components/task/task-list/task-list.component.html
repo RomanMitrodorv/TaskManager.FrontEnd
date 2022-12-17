@@ -1,0 +1,164 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer-content>
+    <div class="flex flex-col w-auto h-full bg-[#f8f8f8]">
+      <div
+        class="flex flex-grow px-10 my-[100px] space-x-6 overflow-auto"
+        cdkDropListGroup
+      >
+        <div
+          *ngFor="let date of dates; let i = index"
+          class="flex flex-col flex-shrink-0 w-72 rounded-[20px]"
+        >
+          <div [ngSwitch]="i">
+            <div
+              class="flex items-center flex-shrink-0 h-[40px] px-2 mb-3 m-3 bg-[#f2f4f5] rounded"
+            >
+              {{ log(i) }}
+              <span class="block text-sm font-semibold">
+                <div *ngSwitchCase="0">Today</div>
+                <div *ngSwitchCase="1">Tomorrow</div>
+                <div *ngSwitchDefault>
+                  {{ date | date : "EEEE" }}
+                </div>
+              </span>
+              <span
+                class="justify-center flex items-center ml-auto w-5 h-5 text-[8px] font-semibold bg-black rounded text-white"
+                >{{ getCountByDate(date) }}</span
+              >
+            </div>
+          </div>
+          <div
+            id="{{ date }}"
+            cdkDropList
+            class="example-list"
+            [cdkDropListData]="tasks"
+            (cdkDropListDropped)="drop($event)"
+          >
+            <div *ngFor="let task of tasks | orderby : 'itemIndex'" cdkDrag>
+              <div *ngIf="task.date.getDate() == date.getDate()">
+                <div
+                  class="bg-[#ffffff] flex flex-col overflow-auto justify-between box-border cursor-move mb-3 rounded"
+                >
+                  <div
+                    class="relative flex flex-col items-start p-4 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
+                    draggable="true"
+                  >
+                    <button
+                      class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 mt-3 mr-2 text-gray-500 rounded hover:bg-gray-200 hover:text-gray-700 group-hover:flex"
+                    >
+                      <svg
+                        class="w-4 h-4 fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
+                        />
+                      </svg>
+                    </button>
+                    <span
+                      class="flex items-center h-6 px-3 text-xs font-semibold text-pink-500 bg-pink-100 rounded-full"
+                      >{{ task.label.name }}</span
+                    >
+                    <h4 class="mt-5 pt-3 px-2 text-lg font-medium">
+                      {{ task.name }}
+                    </h4>
+
+                    <div class="mt-2 pt-2 px-2 text-sm">{{ task.notes }}</div>
+                    <div
+                      class="flex items-center w-full mt-3 text-xs font-medium text-gray-400"
+                    >
+                      <div class="flex items-center">
+                        <svg
+                          class="w-4 h-4 text-gray-300 fill-current"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        <span class="ml-1 leading-none">{{
+                          formatDate(task.date)
+                        }}</span>
+                      </div>
+                      <div class="flex items-center ml-4">
+                        <svg
+                          class="w-4 h-4 text-gray-300 fill-current"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        <span class="ml-1 leading-none">4</span>
+                      </div>
+                      <div class="flex items-center ml-4">
+                        <svg
+                          class="w-4 h-4 text-gray-300 fill-current"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        <span class="ml-1 leading-none">1</span>
+                      </div>
+                      <button
+                        class="inline-flex items-center ml-auto px-1 py-1 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md"
+                        (click)="delete(task.id)"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 23 23"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="border-2 border-dashed flex items-center justify-center h-12 rounded w-auto mt-auto"
+            (click)="openDialog(date)"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="gray">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-drawer-content>
+  <mat-drawer #sideNav mode="side" opened="true" position="end">
+    <app-habit-list></app-habit-list>
+  </mat-drawer>
+</mat-drawer-container>

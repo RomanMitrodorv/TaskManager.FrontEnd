@@ -1,0 +1,66 @@
+<h1 class="text-2xl font-bold mb-8">Habit</h1>
+<form [formGroup]="habitForm" (ngSubmit)="save()">
+  <div>
+    <div class="mb-3 xl:w-48">
+      <label class="form-label inline-block mb-2 text-gray-700"
+        >Title habit</label
+      >
+      <input
+        type="text"
+        formControlName="name"
+        class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+        id="exampleFormControlInput1"
+      />
+
+      <label class="form-label inline-block mb-2 text-gray-700">Count</label>
+      <input
+        type="number"
+        min="1"
+        formControlName="count"
+        class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+        id="exampleFormControlInput1"
+      />
+    </div>
+
+    <label class="form-label inline-block mb-2 text-gray-700">Time</label>
+    <input
+      matTimepicker
+      #t="matTimepicker"
+      [strict]="false"
+      id="timepicker-example"
+      mode="24h"
+      placeholder="Please select time..."
+      name="time"
+      formControlName="time"
+      (timeChange)="timeChangeHandler($event)"
+      class="w-48 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+    />
+  </div>
+  Notifications:
+  <form [formGroup]="notificationForm">
+    <ng-container formArrayName="notifications">
+      <div *ngFor="let notification of notifications.controls; let i = index">
+        <div [formGroupName]="i">
+          <div class="mt-4 grid justify-items-stretch grid-cols-3">
+            <input
+              class="w-9 form-control block p-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              formControlName="hour"
+            />
+            <input
+              class="w-9 form-control block p-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              formControlName="minute"
+            />
+            <span (click)="removeNotification(i)">X</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </form>
+
+  <button
+    type="submit"
+    class="w-auto px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-pink-500 hover:bg-pink-600 hover:shadow-lg focus:outline-none"
+  >
+    Add habit
+  </button>
+</form>
